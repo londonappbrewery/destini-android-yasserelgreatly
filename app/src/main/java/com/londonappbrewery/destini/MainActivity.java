@@ -15,7 +15,9 @@ public class MainActivity extends AppCompatActivity {
     TextView mStory;
     Button mFirstChoice;
     Button mSecondChoice;
-    int yourAnswer;
+    int yourAnswer=0;
+
+
 
 
 
@@ -42,13 +44,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(savedInstanceState!=null){
+            
+            yourAnswer=savedInstanceState.getInt("YourAnswer");
+
+
+        }
+        else{
+
+            yourAnswer=0;
+        }
+
 
 
         // TODO: Step 5 - Wire up the 3 views from the layout to the member variables:
         mStory = (TextView) findViewById(R.id.storyTextView);
         mFirstChoice=(Button)findViewById(R.id.buttonTop);
         mSecondChoice=(Button) findViewById(R.id.buttonBottom);
-
+        checkAnswer();
 
         // TODO: Steps 6, 7, & 9 - Set a listener on the top button:
 
@@ -56,9 +69,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) { Log.d("choice1","you picked the first choice");
 
-                Button b = (Button)v;
-                String buttonText = b.getText().toString();
-                checkAnswer(buttonText);
+
+                if (yourAnswer==0){
+
+                    yourAnswer=1;
+                    checkAnswer();
+                    yourAnswer=3;
+
+                }
+                else if (yourAnswer==3){
+
+                    yourAnswer=6;
+                    checkAnswer();
+
+
+                }
+                else if (yourAnswer==4){
+                    yourAnswer=3;
+                    checkAnswer();
+
+                }
+
 
             }
         });
@@ -67,10 +98,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {Log.d("choice2","you picked the second choice");
 
-                Button b = (Button)v;
-                String buttonText = b.getText().toString();
+                if (yourAnswer==0){
 
-                checkAnswer(buttonText);
+                    yourAnswer=2;
+                    checkAnswer();
+                    yourAnswer=4;
+
+
+                }
+                else if (yourAnswer==4){
+
+                    checkAnswer();
+
+
+                }
+                else if (yourAnswer==3){
+
+                    yourAnswer=5;
+                    checkAnswer();
+
+
+                }
+
 
             }
         });
@@ -84,14 +133,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void checkAnswer(String buttonText){
+    public void checkAnswer(){
         int mQuestion;
         int mAnswer1;
         int mAnswer2;
 
 
-        Log.d("aa",""+buttonText);
-        if ( buttonText.equals("I'll hop in. Thanks for the help!")) {
+
+        if (yourAnswer==1 ){
 
             Toast mytoast=Toast.makeText(getApplicationContext(),R.string.toast_1,Toast.LENGTH_LONG);
             mytoast.show();
@@ -104,8 +153,12 @@ public class MainActivity extends AppCompatActivity {
 
             mAnswer2=mBluePrint[2].getAns2();
             mSecondChoice.setText(mAnswer2);
+
+
+
+
         }
-        else if (buttonText.equals("Better ask him if he's a murderer first.")){
+        else if (yourAnswer==2){
 
             Toast mytoast=Toast.makeText(getApplicationContext(),R.string.toast_2,Toast.LENGTH_LONG);
             mytoast.show();
@@ -121,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
-        else if (buttonText.equals("At least he's honest. I'll climb in.")){
+        else if (yourAnswer==3){
 
             Toast mytoast=Toast.makeText(getApplicationContext(),R.string.toast_3,Toast.LENGTH_LONG);
             mytoast.show();
@@ -139,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        else if (buttonText.equals("Wait, I know how to change a tire")){
+        else if (yourAnswer==4){
             Toast mytoast=Toast.makeText(getApplicationContext(),R.string.toast_4,Toast.LENGTH_LONG);
             mytoast.show();
             mQuestion = mBluePrint[3].getStory();
@@ -150,13 +203,11 @@ public class MainActivity extends AppCompatActivity {
             mSecondChoice.setVisibility(View.GONE);
 
 
-
-
         }
-        else if (buttonText.equals("I love Elton John! Hand him the cassette tape.")){
+        else if (yourAnswer==5){
             Toast mytoast=Toast.makeText(getApplicationContext(),R.string.toast_5,Toast.LENGTH_LONG);
             mytoast.show();
-            mQuestion = mBluePrint[5].getStory();
+            mQuestion = mBluePrint[4].getStory();
             mStory.setText(mQuestion);
 
             //make the button invisable
@@ -166,10 +217,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        else if (buttonText.equals("It's him or me! You take the knife and stab him.")){
+        else if (yourAnswer==6){
             Toast mytoast=Toast.makeText(getApplicationContext(),R.string.toast_6,Toast.LENGTH_LONG);
             mytoast.show();
-            mQuestion = mBluePrint[4].getStory();
+            mQuestion = mBluePrint[5].getStory();
             mStory.setText(mQuestion);
 
             //make the button invisable
@@ -181,7 +232,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
 
+        outState.putInt("YourAnswer",yourAnswer);
+
+
+    }
 
 
 }
